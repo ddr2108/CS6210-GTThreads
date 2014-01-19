@@ -1,6 +1,26 @@
 #ifndef __GTTHREAD_H
 #define __GTTHREAD_H
 
+typedef struct
+{
+  int volatile value;		//Value to store whether mutex in use
+} gtthread_mutex_t;
+
+typedef struct
+{
+    uint32_t flags;
+    void * stack_base;
+    size_t stack_size;
+    size_t guard_size;
+    int32_t sched_policy;
+    int32_t sched_priority;
+} gtthread_attr_t;
+
+typedef unsigned int gtthread_t;
+
+int RRPeriod = 0;
+
+
 /* Must be called before any of the below functions. Failure to do so may
  * result in undefined behavior. 'period' is the scheduling quantum (interval)
  * in microseconds (i.e., 1/1000000 sec.). */
