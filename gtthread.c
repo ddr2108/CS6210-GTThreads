@@ -13,24 +13,21 @@ void gtthread_init(long period){
 int  gtthread_create(gtthread_t *thread,
                      void *(*start_routine)(void *),
                      void *arg){
+    unsigned stack_size = 0;
 
-	//Create stack
-	void* stack;
-	stack = malloc(attr->stack_size);
-	
-	//Clone to create new thread
-	*thread = (gtthread_t) clone(start_routine, stack+attr->stack_size, CLONE_SIGHAND|CLONE_VM, arg); 
+    arch_thread_info *pv = calloc(1, sizeof(arch_thread_info));
+
+    _beginthreadex(NULL, stack_size, worker_proxy, pv, CREATE_SUSPENDED, NULL);
+    ResumeThread(pv->handle);
+    *thread = (pthread_t) pv;
+    return 0;
 
 }
 
 /* see man pthread_join(3) */
 int  gtthread_join(gtthread_t thread, void **status){
 	//Wait for thread to finish
-	waitpid(thread, SIGCHLD, __WALL);
-
-	//Kill Thread
-	kill(thread, SIGUSR1);
-	
+rc = waitone(thread, INFINITE);
     return 0;
 }
 
@@ -39,8 +36,10 @@ int  gtthread_join(gtthread_t thread, void **status){
 
 /* see man pthread_exit(3) */
 void gtthread_exit(void *retval){
-	//Exit
-	exit(0);
+    if (pv != NULL) {
+    } else {
+        exit(1); /* User should not call pthread_exit in the main thread */
+    }
 }
 
 /* see man sched_yield(2) */
@@ -71,6 +70,7 @@ gtthread_t gtthread_self(void);\{
       self = ptw32_new ();
       sp = (ptw32_thread_t *) self.p;
 	  sp->threadH = GetCurrentThread ();
+    return self();
 
 }
 
@@ -109,6 +109,83 @@ int  gtthread_mutex_unlock(gtthread_mutex_t *mutex){
     }
 
 }
+
+tout_val.it_interval.tv_sec = 0;
+tout_val.it_interval.tv_usec = 0;
+tout_val.it_value.tv_sec = INTERVAL; /* set timer for "INTERVAL (10) seconds */
+tout_val.it_value.tv_usec = 0;
+setitimer(ITIMER_REAL, &tout_val,0);
+signal(SIGALRM,schedule);
+
+linked list of processes
+signal -> set, make context
+sched_yield -. call alarm to rescehdule
+
+typedef struct{
+    ucontext_t node;
+    context* next;
+} contextNode;
+
+typedef struct{
+    contextNode* head = NULL;
+    contextNode* tail = NULL;
+} context;
+
+context information;
+contextNode current;    //Current one to change
+
+ucontext_t T1, T2,Main;
+ucontext_t a;
+
+void alarm()
+{
+    getcontext(&T2);
+     T2.uc_link=0;
+     T2.uc_stack.ss_sp=malloc(MEM);
+     T2.uc_stack.ss_size=MEM;
+     T2.uc_stack.ss_flags=0;
+     makecontext(&T2, (void*)&fn2, 0);
+     swapcontext(&Main, &T2);
+    
+     sigaction(SIGPROF, &act, &oact);
+     // Start itimer
+     it.it_interval.tv_sec = 4;
+     it.it_interval.tv_usec = 50000;
+     it.it_value.tv_sec = 1;
+     it.it_value.tv_usec = 100000;
+     setitimer(ITIMER_PROF, &it, NULL);
+
+}
+
+void addContext(ucontext_t* newContext){
+    if (information.head==NULL){
+        information.head = newContext;
+        information.tail = newContext;
+    }else{
+        contextNode* newNode = malloc(sizeof(contextNode));
+        information.tail->next =
+    }
+}
+
+void removeContext(ucontext_t oldContext){
+    contextNode* lead= information.head;
+    contextNode* trail = NULL;
+
+    while(lead!=NULL){
+        if (lead->node==oldContext){
+            if (tail!=NULL){
+                tail->next = lead->next;
+            }else{
+                information.head = lead.next;
+            }
+            free(lead)
+            break;
+        }
+        trail = lead;   //Set trail to previous head
+    }
+}
+
+http://nitish712.blogspot.com/2012/10/thread-library-using-context-switching.html
 
 /* gtthread_mutex_destroy() and gtthread_mutex_trylock() do not need to be
  * implemented */
