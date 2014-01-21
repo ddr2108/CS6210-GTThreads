@@ -1,16 +1,14 @@
-typedef struct{
-    ucontext_t node;
-    contextNode* next;
-} contextNode;
-
-typedef struct{
-    contextNode* head = NULL;
-    contextNode* tail = NULL;
-} context;
-
-context information;
-contextNode* current;    //Current one to change
-
+//////////////////////////////////
+//addContext()
+//
+//parameters: 
+//      ucontext_t newContext - 
+//             new threads context
+//returns: 
+//      none
+//
+//Adds context to linked list
+//////////////////////////////////
 void addContext(ucontext_t newContext){
     //Create new node
     contextNode* newNode = malloc(sizeof(contextNode));
@@ -26,6 +24,16 @@ void addContext(ucontext_t newContext){
     }
 }
 
+//////////////////////////////////
+//removeContext()
+//
+//parameters: 
+//      none
+//returns: 
+//      none
+//
+//Remove context from linked list
+//////////////////////////////////
 void removeContext(){
     //Pointers to nodes
     contextNode* lead = information.head;
@@ -53,8 +61,17 @@ void removeContext(){
         lead = lead->next;
     }
 }
-
-//Set alarm, switch context based on next in linked list
+//////////////////////////////////
+//changeContext()
+//
+//parameters: 
+//      int sig - type of signal
+//returns: 
+//      none
+//
+//Set alarm, switch context based 
+//on next in linked list
+//////////////////////////////////
 void changeContext(int sig)
 {
     struct itimerval it;       //Structure to hold time info

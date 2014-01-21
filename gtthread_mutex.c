@@ -1,13 +1,16 @@
-typedef struct{
-    int volatile value;		//Value to store whether mutex in use
-} gtthread_mutex_t;
-
-
-/* see man pthread_mutex(3); except init does not have the mutexattr parameter,
- * and should behave as if mutexattr is NULL (i.e., default attributes); also,
- * static initializers do not need to be implemented */
+//////////////////////////////////
+//gtthread_mutex_init()
+//
+//parameters: 
+//      gtthread_mutex_t *mutex - 
+//             mutex to modify
+//returns: 
+//      int - success of creation
+//
+//Initializes a mutex
+//////////////////////////////////
 int  gtthread_mutex_init(gtthread_mutex_t *mutex){
-	//Return if does not exist
+    //Return if does not exist
     if (mutex == NULL)
         return 1;
 
@@ -17,7 +20,19 @@ int  gtthread_mutex_init(gtthread_mutex_t *mutex){
     return 0;
 }
 
+//////////////////////////////////
+//gtthread_mutex_lock()
+//
+//parameters: 
+//      gtthread_mutex_t *mutex - 
+//             mutex to modify
+//returns: 
+//      int - success of locking
+//
+//Locks a mutex
+//////////////////////////////////
 int  gtthread_mutex_lock(gtthread_mutex_t *mutex){
+    //Attempt to change valu eof mutex to 1 when was 0 perviously
     if (__bionic_cmpxchg(0, 1, &mutex->value) != 0){      
         while (__bionic_swap(2, &mutex->value) != 0)
             __futex_wait_ex(&mutex->value, 0, 2, 0);
@@ -27,9 +42,23 @@ int  gtthread_mutex_lock(gtthread_mutex_t *mutex){
     return 1;
 }
 
+//////////////////////////////////
+//gtthread_mutex_unlock()
+//
+//parameters: 
+//      gtthread_mutex_t *mutex - 
+//             mutex to modify
+//returns: 
+//      int - success of unlocking
+//
+//Unlocks a Mutex
+//////////////////////////////////
 int  gtthread_mutex_unlock(gtthread_mutex_t *mutex){
+    //Change value of mutex to 0
     if (__bionic_atomic_dec(&mutex->value) != 1) {        
         mutex->value = 0;        // Just set to "0"
         __futex_wake_ex(&mutex->value, 0, 1);    // -> This ensures waking other threads.
     }
+    
+    return 1;
 }

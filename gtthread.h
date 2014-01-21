@@ -1,6 +1,8 @@
 #ifndef __GTTHREAD_H
 #define __GTTHREAD_H
 
+#include "gtthread_sched.h"
+#include "gtthread_mutex.h"
 
 typedef struct
 {
@@ -49,16 +51,5 @@ int  gtthread_cancel(gtthread_t thread);
 
 /* see man pthread_self(3) */
 gtthread_t gtthread_self(void);
-
-
-/* see man pthread_mutex(3); except init does not have the mutexattr parameter,
- * and should behave as if mutexattr is NULL (i.e., default attributes); also,
- * static initializers do not need to be implemented */
-int  gtthread_mutex_init(gtthread_mutex_t *mutex);
-int  gtthread_mutex_lock(gtthread_mutex_t *mutex);
-int  gtthread_mutex_unlock(gtthread_mutex_t *mutex);
-
-/* gtthread_mutex_destroy() and gtthread_mutex_trylock() do not need to be
- * implemented */
 
 #endif // __GTTHREAD_H
