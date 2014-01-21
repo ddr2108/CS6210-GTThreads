@@ -1,10 +1,6 @@
 #ifndef __GTTHREAD_H
 #define __GTTHREAD_H
 
-typedef struct
-{
-  int volatile value;		//Value to store whether mutex in use
-} gtthread_mutex_t;
 
 typedef struct
 {
