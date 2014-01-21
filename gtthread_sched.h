@@ -1,16 +1,19 @@
 #ifndef __GTTHREAD_SCHED_H
 #define __GTTHREAD_SCHED_H
 
+#include <sys/time.h>
+#include <signal.h>
+
 //Node
-typedef struct{
+typedef struct _contextNode{
     ucontext_t node;
-    contextNode* next;
+    struct _contextNode* next;
 } contextNode;
 
 //Node Linked List
-typedef struct{
-    contextNode* head = NULL;
-    contextNode* tail = NULL;
+typedef struct _context{
+    contextNode* head;
+    contextNode* tail;
 } context;
 
 context information;    //Information about linked list

@@ -11,16 +11,17 @@
 //////////////////////////////////
 void addContext(ucontext_t newContext){
     //Create new node
-    contextNode* newNode = malloc(sizeof(contextNode));
+    contextNode* newNode = (contextNode*) malloc(sizeof(contextNode));
     newNode->node = newContext;
     newNode->next = NULL;
     
     //Add node to linked list
     if (information.head==NULL){
-        information.head = newContext;
-        information.tail = newContext;
+        information.head = newNode;
+        information.tail = newNode;
     }else{
         information.tail->next = newNode;
+        information.tail = newNode;
     }
 }
 
@@ -46,14 +47,14 @@ void removeContext(){
             if (trail!=NULL){
                 trail->next = lead->next;
             }else{      //its the head
-                information.head = lead.next;
+                information.head = lead->next;
                 //If only item in linked list
                 if (information.tail==current){
-                    information.tail = lead.next;
+                    information.tail = lead->next;
                 }
             }
             //Free memory
-            free(lead)
+            free(lead);
             break;
         }
         //Move values
@@ -85,7 +86,7 @@ void changeContext(int sig)
     act.sa_handler = changeContext;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction(SIGPROF, &act, &oact); 
+    sigaction(SIGVTALRM, &act, &oact); 
                            
     // Start itimer
     it.it_interval.tv_sec = RRPeriod;

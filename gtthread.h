@@ -1,6 +1,7 @@
 #ifndef __GTTHREAD_H
 #define __GTTHREAD_H
 
+#include <stdlib.h>
 #include "gtthread_sched.h"
 #include "gtthread_mutex.h"
 
