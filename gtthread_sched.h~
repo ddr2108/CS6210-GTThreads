@@ -95,7 +95,7 @@ int getID();
 //returns: 
 //      none
 //
-//Set period
+//Return id of self
 //////////////////////////////////
 void setRR(long period);
 

@@ -1,8 +1,9 @@
-
+#ifndef __GTTHREAD_MUTEX_H
+#define __GTTHREAD_MUTEX_H
 
 #include "gtthread_mutex.h"
 
-
+#endif // __GTTHREAD_H
 //////////////////////////////////
 //gtthread_mutex_init()
 //

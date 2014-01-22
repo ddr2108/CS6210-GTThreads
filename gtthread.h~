@@ -1,4 +1,19 @@
-#include "gtthread.h"
+#ifndef __GTTHREAD_H
+#define __GTTHREAD_H
+
+#include <stdlib.h>
+#include "gtthread_mutex.h"
+#include "gtthread_sched.h"
+
+#define MEM 64000
+
+//Period associated with Round robin
+int RRPeriod = 0;					
+//ID of next thread
+int id = 0; 
+
+//Thread id structure
+typedef unsigned int gtthread_t;	
 
 //////////////////////////////////
 //gtthread_init()
@@ -10,9 +25,7 @@
 //
 //Initialize threading library
 //////////////////////////////////
-void gtthread_init(long period){
-	setRR(period);		//Initilize time between round robin switching
-}
+void gtthread_init(long period);
 
 //////////////////////////////////
 //gtthread_create()
@@ -28,21 +41,7 @@ void gtthread_init(long period){
 //////////////////////////////////
 int  gtthread_create(gtthread_t *thread,
                      void *(*start_routine)(void *),
-                     void *arg){
-	
-	ucontext_t newContext;	//hold context
-	
-	//Create Context
-	getcontext(&newContext);
-	newContext.uc_link=0;
-	newContext.uc_stack.ss_sp=malloc(MEM);
-	newContext.uc_stack.ss_size=MEM;
-	newContext.uc_stack.ss_flags=0;
-	makecontext(&newContext, (void*)&start_routine, 1, arg);
-
-	//add Context
-	return addContext(newContext);
-}
+                     void *arg);
 
 //////////////////////////////////
 //gtthread_join()
@@ -55,14 +54,7 @@ int  gtthread_create(gtthread_t *thread,
 //
 //Join thread with given id
 //////////////////////////////////
-int  gtthread_join(gtthread_t thread, void **status){
-	//Wait for thread to finish
-//rc = waitone(thread, INFINITE);
-    return 0;
-
-	//FIX: status
-}
-
+int  gtthread_join(gtthread_t thread, void **status);
 
 //////////////////////////////////
 //gtthread_exit()
@@ -74,11 +66,7 @@ int  gtthread_join(gtthread_t thread, void **status){
 //
 //Exit thread
 //////////////////////////////////
-void gtthread_exit(void *retval){
-    removeContext();	//Remove context from linked list
-
-	//FIX: Make it return value
-}
+void gtthread_exit(void *retval);
 
 //////////////////////////////////
 //gtthread_yield()
@@ -90,11 +78,7 @@ void gtthread_exit(void *retval){
 //
 //Change context to next thread
 //////////////////////////////////
-int gtthread_yield(){
-	changeContext(1);	//Change context
-        
-	return 1;
-}
+int gtthread_yield();
 
 //////////////////////////////////
 //gtthread_equal()
@@ -107,24 +91,19 @@ int gtthread_yield(){
 //
 //Change context to next thread
 //////////////////////////////////
-int  gtthread_equal(gtthread_t t1, gtthread_t t2){
-	return t1==t2;	//return if they are equal to each other
-}
+int  gtthread_equal(gtthread_t t1, gtthread_t t2);
 
 //////////////////////////////////
 //gtthread_cancel()
 //
 //parameters: 
-//      gtthread_t thread - thread id
+//      gtthread_t thread
 //returns: 
 //      int - success
 //
 //Kill thread with given id
 //////////////////////////////////
-int  gtthread_cancel(gtthread_t thread){
-
-	return removeThread(thread);
-}
+int  gtthread_cancel(gtthread_t thread);
 
 //////////////////////////////////
 //gtthread_self()
@@ -134,10 +113,8 @@ int  gtthread_cancel(gtthread_t thread){
 //returns: 
 //      gtthread_t - id of thread
 //
-//Get ID of current thread
+//Change context to next thread
 //////////////////////////////////
-gtthread_t gtthread_self(){
- 	//Return id of thread
-    return getID();
+gtthread_t gtthread_self();
 
-}
+#endif // __GTTHREAD_H
