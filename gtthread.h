@@ -89,6 +89,19 @@ int gtthread_yield();
 int  gtthread_equal(gtthread_t t1, gtthread_t t2);
 
 //////////////////////////////////
+//gtthread_execute()
+//
+//parameters: 
+//      void *(*start_routine)(void *) - routine
+//      void *arg - arguments
+//returns: 
+//      none
+//
+//Initialize threading library
+//////////////////////////////////
+void gtthread_execute(void *(*start_routine)(void *),void *arg);
+
+//////////////////////////////////
 //gtthread_cancel()
 //
 //parameters: 

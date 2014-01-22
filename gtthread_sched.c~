@@ -1,5 +1,5 @@
 #include "gtthread_sched.h"
-
+#include <stdio.h>
 //Period associated with Round robin
 long RRPeriod = 0;					
 //ID of next thread
@@ -28,11 +28,12 @@ int addContext(ucontext_t newContext){
         information.head = newNode;
         information.tail = newNode;
 		current = newNode;
+		initialContext();
     }else{
         information.tail->next = newNode;
         information.tail = newNode;
     }
-
+	fprintf(stderr, "%d", newNode->id);
 	return newNode->id;
 }
 
@@ -154,6 +155,37 @@ void changeContext(int sig)
 }
 
 //////////////////////////////////
+//initialContext()
+//
+//parameters: 
+//      none
+//returns: 
+//      none
+//
+//Set initial context
+//////////////////////////////////
+void initialContext()
+{
+    struct itimerval it;       //Structure to hold time info
+    struct sigaction act, oact;         //Structure for signal handler
+    
+	setcontext(&information.head->node);
+    
+    //Set signal handler
+    act.sa_handler = changeContext;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    sigaction(SIGVTALRM, &act, &oact); 
+
+	// Start itimer
+    it.it_interval.tv_sec = 0;
+    it.it_interval.tv_usec = RRPeriod;
+    it.it_value.tv_sec = 0;
+    it.it_value.tv_usec = RRPeriod;
+    setitimer(ITIMER_VIRTUAL, &it, NULL);
+}
+
+//////////////////////////////////
 //getID()
 //
 //parameters: 
@@ -176,7 +208,7 @@ int getID(){
 //returns: 
 //      none
 //
-//Return id of self
+//Set period
 //////////////////////////////////
 void setRR(long period){
 	RRPeriod = period;	//set period

@@ -7,11 +7,6 @@
 
 #define MEM 64000
 
-//Period associated with Round robin
-int RRPeriod = 0;					
-//ID of next thread
-int id = 0; 
-
 //Thread id structure
 typedef unsigned int gtthread_t;	
 
@@ -92,6 +87,19 @@ int gtthread_yield();
 //Change context to next thread
 //////////////////////////////////
 int  gtthread_equal(gtthread_t t1, gtthread_t t2);
+
+//////////////////////////////////
+//gtthread_execute()
+//
+//parameters: 
+//      void *(*start_routine)(void *) - routine
+//      void *arg - arguments
+//returns: 
+//      none
+//
+//Initialize threading library
+//////////////////////////////////
+void gtthread_execute(void *(*start_routine)(void *),void *arg);
 
 //////////////////////////////////
 //gtthread_cancel()

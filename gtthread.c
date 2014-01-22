@@ -1,5 +1,5 @@
 #include "gtthread.h"
-
+#include <stdio.h>
 //////////////////////////////////
 //gtthread_init()
 //
@@ -12,6 +12,22 @@
 //////////////////////////////////
 void gtthread_init(long period){
 	setRR(period);		//Initilize time between round robin switching
+}
+
+//////////////////////////////////
+//gtthread_execute()
+//
+//parameters: 
+//      void *(*start_routine)(void *) - routine
+//      void *arg - arguments
+//returns: 
+//      none
+//
+//Initialize threading library
+//////////////////////////////////
+void gtthread_execute(void *(*start_routine)(void *),void *arg){
+	void *retval=start_routine(arg);
+	gtthread_exit(retval);
 }
 
 //////////////////////////////////
@@ -38,7 +54,7 @@ int  gtthread_create(gtthread_t *thread,
 	newContext.uc_stack.ss_sp=malloc(MEM);
 	newContext.uc_stack.ss_size=MEM;
 	newContext.uc_stack.ss_flags=0;
-	makecontext(&newContext, (void*)&start_routine, 1, arg);
+	makecontext(&newContext, gtthread_execute,2,start_routine,arg);
 
 	//add Context
 	return addContext(newContext);
