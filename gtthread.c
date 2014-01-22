@@ -13,11 +13,12 @@
 void gtthread_init(long period){
 	ucontext_t newContext;	//hold context
 
-	setRR(period);		//Initilize time between round robin switching
-	
 	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables
 	
-information.id = 0;
+	information.id = 0;					//Initialize strucutre
+	information.head = NULL;
+	information.RRPeriod = period;		//set period	
+
 	//add Context
 	 addContext(newContext);
 }
@@ -80,12 +81,13 @@ int  gtthread_create(gtthread_t *thread,
 //Join thread with given id
 //////////////////////////////////
 int  gtthread_join(gtthread_t thread, void **status){
+	
 	//check if thread is dead	
 	while(threadDead(thread, gtthread_self())==1){
-		gtthread_yield();	//yield to next thread
+		gtthread_yield();	//yield to next thread if not
 	}
 
-    return 0;   //success
+    return 0;
 
 	//FIX: status
 }
@@ -102,7 +104,7 @@ int  gtthread_join(gtthread_t thread, void **status){
 //Exit thread
 //////////////////////////////////
 void gtthread_exit(void *retval){
-    removeContext();	//Remove context from linked list
+    removeContext(current);	//Remove context from linked list
 }
 
 //////////////////////////////////
@@ -117,7 +119,6 @@ void gtthread_exit(void *retval){
 //////////////////////////////////
 int gtthread_yield(){
 	changeContext(1);	//Change context
-        
 	return 0;       //no error
 }
 
@@ -149,10 +150,10 @@ int  gtthread_equal(gtthread_t t1, gtthread_t t2){
 int  gtthread_cancel(gtthread_t thread){
 	//Check if trying to cancel itself and call correct function	
 	if (thread==getID()){
-		removeContext();
+		removeContext(current);
 		return 0;	
 	}else{
-		return removeThread(thread);
+		return removeID(thread);
 	}
 }
 

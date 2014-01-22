@@ -6,8 +6,9 @@
 #include <signal.h>
 #include <ucontext.h>
 
-#define DONE 888
 
+
+/////////////////STRUCTURES/////////////////////////////////////////////
 //Node
 typedef struct _contextNode{
     ucontext_t node;				//Context
@@ -25,11 +26,15 @@ typedef struct _context{
     contextNode* tail;
 } context;
 
+//////////GLOBAL VARIABLES/////////////////////////////////////////////
+#define DONE 888
+
 context information;    //Information about linked list
 contextNode* current;    //Current context running
 
 contextNode* dead;
 
+///////////////////FUNCTION PROTOTYPES///////////////////////////////////
 
 //////////////////////////////////
 //addContext()
@@ -48,17 +53,17 @@ int addContext(ucontext_t newContext);
 //removeContext()
 //
 //parameters: 
-//      none
+//      currentNode* toDelete - node
+//					to delete
 //returns: 
 //      none
 //
 //Remove context from linked list
 //////////////////////////////////
-void removeContext();
-
+void removeContext(contextNode* toDelete);
 
 //////////////////////////////////
-//removeThread()
+//removeID()
 //
 //parameters: 
 //      int id - id of thread to kill
@@ -67,20 +72,19 @@ void removeContext();
 //
 //Kill Thread with given id
 //////////////////////////////////
-int removeThread(int id);
+int removeID(int id);
 
 //////////////////////////////////
-//threadDead()
+//initialContext()
 //
 //parameters: 
-//      int id - id of thread to kill
-//		int parent - id of parent
+//      none
 //returns: 
-//      int - 0 if dead
+//      none
 //
-//Find if thread with is dead
+//Set initial context
 //////////////////////////////////
-int threadDead(int id, int parent);
+void initialContext();
 
 //////////////////////////////////
 //changeContext()
@@ -96,16 +100,41 @@ int threadDead(int id, int parent);
 void changeContext(int sig);
 
 //////////////////////////////////
-//initialContext()
+//threadDead()
+//
+//parameters: 
+//      int id - id of thread to kill
+//		int parent - id of parent
+//returns: 
+//      int - 0 if dead
+//
+//Find if thread with is dead
+//////////////////////////////////
+int threadDead(int id, int parent);
+
+//////////////////////////////////
+//findThread()
+//
+//parameters: 
+//      int id - id of thread to find
+//returns: 
+//      contextNode* - pointer to node
+//
+//Adds context to linked list
+//////////////////////////////////
+contextNode* findThread(int ID);
+
+//////////////////////////////////
+//setTimer()
 //
 //parameters: 
 //      none
 //returns: 
 //      none
 //
-//Set initial context
+//Set timer
 //////////////////////////////////
-void initialContext();
+void setTimer();
 
 //////////////////////////////////
 //getID()
@@ -118,17 +147,5 @@ void initialContext();
 //Return id of self
 //////////////////////////////////
 int getID();
-
-//////////////////////////////////
-//setRR()
-//
-//parameters: 
-//      long period - time of RR
-//returns: 
-//      none
-//
-//Set period
-//////////////////////////////////
-void setRR(long period);
 
 #endif // __GTTHREAD_SCHED_H

@@ -7,7 +7,7 @@
 void *thr2(void *in) {
 int i;
 int j = 0;
-    for(i = 0; i<100000; i++){
+    for(i = 0; i<300000; i++){
 	fprintf(stderr, "World\n");
     //fflush(stdout);
 	//gtthread_cancel(1);
@@ -21,14 +21,15 @@ int i;
 int j = 0;
 int *a; 
     gtthread_t t1, t2;
+    gtthread_create( &t1, thr2, NULL);
     for(i = 0; i<100000; i++){
 	fprintf(stderr, "Hello\n");
     //fflush(stdout);
 	//gtthread_cancel(1);
 	}	
-    gtthread_create( &t1, thr2, NULL);
 
-gtthread_join(2, &a);
+
+
 fprintf(stderr, "bler\n");
     return 5;
 }
@@ -40,7 +41,7 @@ int main() {
 int *a; 
     gtthread_init(50000L);
    	gtthread_create( &t2, thr1, NULL);
-
+gtthread_join(2, &a);
 gtthread_join(1, &a);
 		fprintf(stderr,"Duh\n");
 		//gtthread_yield();
