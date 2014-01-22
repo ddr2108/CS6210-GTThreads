@@ -22,18 +22,20 @@ int addContext(ucontext_t newContext){
     newNode->node = newContext;
     newNode->next = NULL;
 	newNode->id = id++;
-    
+
     //Add node to linked list
     if (information.head==NULL){
+fprintf(stderr, "in1\n");
         information.head = newNode;
         information.tail = newNode;
 		current = newNode;
 		initialContext();
     }else{
+fprintf(stderr, "in2\n");
         information.tail->next = newNode;
         information.tail = newNode;
     }
-	fprintf(stderr, "%d", newNode->id);
+
 	return newNode->id;
 }
 
@@ -130,14 +132,17 @@ void changeContext(int sig)
 {
     struct itimerval it;       //Structure to hold time info
     struct sigaction act, oact;         //Structure for signal handler
-    
+	contextNode* prev; 
+
     //Swap context
 	if (current->next!=NULL){
-    	swapcontext(&current->node, &current->next->node);
-    	current = current->next;
+		prev = current;
+		current = current->next;
+	fprintf(stderr, "a:%d %d\n", prev->id, current->id);
 	}else{
-	    swapcontext(&current->node, &information.head->node);
+		prev = current;
     	current = information.head;
+	fprintf(stderr, "a:%d %d\n", prev->id, current->id);
 	}
     
     //Set signal handler
@@ -152,6 +157,9 @@ void changeContext(int sig)
     it.it_value.tv_sec = 0;
     it.it_value.tv_usec = RRPeriod;
     setitimer(ITIMER_VIRTUAL, &it, NULL);
+
+	//Swap COntext
+    swapcontext(prev, current);
 }
 
 //////////////////////////////////
@@ -166,23 +174,26 @@ void changeContext(int sig)
 //////////////////////////////////
 void initialContext()
 {
-    struct itimerval it;       //Structure to hold time info
+
+	struct itimerval it;       //Structure to hold time info
     struct sigaction act, oact;         //Structure for signal handler
-    
-	setcontext(&information.head->node);
     
     //Set signal handler
     act.sa_handler = changeContext;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction(SIGVTALRM, &act, &oact); 
+    sigaction(SIGPROF, &act, &oact); 
 
 	// Start itimer
     it.it_interval.tv_sec = 0;
     it.it_interval.tv_usec = RRPeriod;
     it.it_value.tv_sec = 0;
     it.it_value.tv_usec = RRPeriod;
-    setitimer(ITIMER_VIRTUAL, &it, NULL);
+    setitimer(ITIMER_PROF, &it, NULL);
+
+	//Set current context
+	current = information.head;
+	//setcontext(&information.head->node);
 }
 
 //////////////////////////////////

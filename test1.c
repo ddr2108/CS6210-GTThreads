@@ -15,8 +15,9 @@ void *thr1(void *in) {
 
 void *thr2(void *in) {
     while(1){
-	fprintf(stderr, "World\n");
-    fflush(stdout);
+		fprintf(stderr, "World\n");
+    	fflush(stdout);
+		//gtthread_yield();
 	}	
 	
     return NULL;
@@ -26,10 +27,14 @@ int main() {
     gtthread_t t1, t2;
 
     gtthread_init(50000L);
+   	gtthread_create( &t2, thr2, NULL);
+	fprintf(stderr, "Hello1\n");
     gtthread_create( &t1, thr1, NULL);
-    gtthread_create( &t2, thr2, NULL);
-    while(1);
-
+	fprintf(stderr, "Hello2\n");
+    while(1){
+		fprintf(stderr,"Duh\n");
+		//gtthread_yield();
+	}
     return EXIT_SUCCESS;
 }
 

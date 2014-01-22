@@ -12,6 +12,11 @@
 //////////////////////////////////
 void gtthread_init(long period){
 	setRR(period);		//Initilize time between round robin switching
+
+	ucontext_t newContext;	//hold context
+	
+	//add Context
+	 addContext(newContext);
 }
 
 //////////////////////////////////
