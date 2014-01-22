@@ -97,8 +97,6 @@ int  gtthread_join(gtthread_t thread, void **status){
 //////////////////////////////////
 void gtthread_exit(void *retval){
     removeContext();	//Remove context from linked list
-
-	//FIX: Make it return value
 }
 
 //////////////////////////////////
@@ -143,8 +141,13 @@ int  gtthread_equal(gtthread_t t1, gtthread_t t2){
 //Kill thread with given id
 //////////////////////////////////
 int  gtthread_cancel(gtthread_t thread){
-
-	return removeThread(thread);
+	//Check if trying to cancel itself and call correct function	
+	if (thread==getID()){
+		removeContext();
+		return 1;	
+	}else{
+		return removeThread(thread);
+	}
 }
 
 //////////////////////////////////

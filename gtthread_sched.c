@@ -58,6 +58,7 @@ void removeContext(){
     while(lead!=NULL){
         //If reached the correct node
         if (lead==current){
+	fprintf(stderr, "found\n");
             if (trail!=NULL){
                 trail->next = lead->next;
             }else{      //its the head
@@ -67,6 +68,8 @@ void removeContext(){
                     information.tail = lead->next;
                 }
             }
+
+
             //Free memory
             free(lead);
             break;
@@ -75,6 +78,12 @@ void removeContext(){
         trail = lead;
         lead = lead->next;
     }
+
+	//Change current thread
+	current = trail;
+	//Change context	
+	setcontext(current);
+	changeContext(1);
 }
 
 //////////////////////////////////

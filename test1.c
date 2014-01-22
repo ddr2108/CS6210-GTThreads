@@ -5,12 +5,13 @@
 /* Tests creation.
    Should print "Hello World!" */
 
-void *thr1(void *in) {
-    while(1){
+int *thr1(void *in) {
+    //while(1){
 	fprintf(stderr, "Hello\n");
     fflush(stdout);
-	}	
-    return NULL;
+	gtthread_cancel(1);
+	//}	
+    return 5;
 }
 
 void *thr2(void *in) {
@@ -38,5 +39,5 @@ int main() {
     return EXIT_SUCCESS;
 }
 
-//make clean; rm test1; make; gcc -Wall -pedantic -I{...} -o test1 test1.c gtthread.a; ./test1 
+//make clean; rm test1; make; gcc -Wall -pedantic -I{...} -o test1 test1.c gtthread.a;clear;  ./test1 
 
