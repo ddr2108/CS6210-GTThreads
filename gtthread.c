@@ -79,7 +79,7 @@ int  gtthread_create(gtthread_t *thread,
 int  gtthread_join(gtthread_t thread, void **status){
 	//Wait for thread to finish
 //rc = waitone(thread, INFINITE);
-    return 0;
+    return 0;   //success
 
 	//FIX: status
 }
@@ -105,14 +105,14 @@ void gtthread_exit(void *retval){
 //parameters: 
 //      none
 //returns: 
-//      none
+//      int - success
 //
 //Change context to next thread
 //////////////////////////////////
 int gtthread_yield(){
 	changeContext(1);	//Change context
         
-	return 1;
+	return 0;       //no error
 }
 
 //////////////////////////////////
@@ -120,9 +120,9 @@ int gtthread_yield(){
 //
 //parameters: 
 //      gtthread_t t1 - first thread
-//		gtthread_t t2 - second thread
+//	gtthread_t t2 - second thread
 //returns: 
-//      none
+//      int - whether equal
 //
 //Change context to next thread
 //////////////////////////////////
@@ -144,7 +144,7 @@ int  gtthread_cancel(gtthread_t thread){
 	//Check if trying to cancel itself and call correct function	
 	if (thread==getID()){
 		removeContext();
-		return 1;	
+		return 0;	
 	}else{
 		return removeThread(thread);
 	}

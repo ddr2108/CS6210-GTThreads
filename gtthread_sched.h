@@ -9,8 +9,9 @@
 //Node
 typedef struct _contextNode{
     ucontext_t node;
-	int id;
+    int id;
     struct _contextNode* next;
+    int parent;
 } contextNode;
 
 //Node Linked List

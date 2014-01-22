@@ -25,13 +25,11 @@ int addContext(ucontext_t newContext){
 
     //Add node to linked list
     if (information.head==NULL){
-fprintf(stderr, "in1\n");
         information.head = newNode;
         information.tail = newNode;
 		current = newNode;
 		initialContext();
     }else{
-fprintf(stderr, "in2\n");
         information.tail->next = newNode;
         information.tail = newNode;
     }
@@ -116,14 +114,14 @@ int removeThread(int id){
             }
             //Free memory
             free(lead);
-			return 1;
+			return 0;
         }
         //Move values
         trail = lead;
         lead = lead->next;
     }
 
-	return 0;	//if none match, return 0
+	return 1;	//if none match, return 0
 }
 
 //////////////////////////////////
@@ -183,7 +181,7 @@ void changeContext(int sig)
 //////////////////////////////////
 void initialContext(){
 
-	struct itimerval it;       //Structure to hold time info
+    struct itimerval it;       //Structure to hold time info
     struct sigaction act, oact;         //Structure for signal handler
     
     //Set signal handler
@@ -192,16 +190,15 @@ void initialContext(){
     act.sa_flags = 0;
     sigaction(SIGPROF, &act, &oact); 
 
-	// Start itimer
+    // Start itimer
     it.it_interval.tv_sec = 0;
     it.it_interval.tv_usec = RRPeriod;
     it.it_value.tv_sec = 0;
     it.it_value.tv_usec = RRPeriod;
     setitimer(ITIMER_PROF, &it, NULL);
 
-	//Set current context
-	current = information.head;
-	//setcontext(&information.head->node);
+    //Set current context
+    current = information.head;
 }
 
 //////////////////////////////////
