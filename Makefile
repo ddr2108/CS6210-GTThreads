@@ -15,7 +15,7 @@ LIB_OBJ = $(patsubst %.c,%.o,$(LIB_SRC))
 
 # pattern rule for object files
 %.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@ 
 
 all: $(LIBRARY)
 

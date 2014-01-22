@@ -181,8 +181,7 @@ void changeContext(int sig)
 //
 //Set initial context
 //////////////////////////////////
-void initialContext()
-{
+void initialContext(){
 
 	struct itimerval it;       //Structure to hold time info
     struct sigaction act, oact;         //Structure for signal handler

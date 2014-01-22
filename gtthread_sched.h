@@ -76,6 +76,18 @@ int removeThread(int id);
 void changeContext(int sig);
 
 //////////////////////////////////
+//initialContext()
+//
+//parameters: 
+//      none
+//returns: 
+//      none
+//
+//Set initial context
+//////////////////////////////////
+void initialContext();
+
+//////////////////////////////////
 //getID()
 //
 //parameters: 
