@@ -28,9 +28,11 @@ int addContext(ucontext_t newContext){
         information.head = newNode;
         information.tail = newNode;
 		current = newNode;
+		newNode->parent = -1;
 		initialContext();
     }else{
-        information.tail->next = newNode;
+		newNode->parent = current->id;        
+		information.tail->next = newNode;
         information.tail = newNode;
     }
 
@@ -56,7 +58,7 @@ void removeContext(){
     while(lead!=NULL){
         //If reached the correct node
         if (lead==current){
-	fprintf(stderr, "found\n");
+
             if (trail!=NULL){
                 trail->next = lead->next;
             }else{      //its the head
@@ -66,9 +68,6 @@ void removeContext(){
                     information.tail = lead->next;
                 }
             }
-
-
-            //Free memory
             free(lead);
             break;
         }
@@ -77,11 +76,17 @@ void removeContext(){
         lead = lead->next;
     }
 
+
 	//Change current thread
-	current = trail;
-	//Change context	
-	setcontext(current);
-	changeContext(1);
+	if (trail->next!=NULL){
+		current = trail->next;
+	}else{
+		current = information.head;
+	}
+	//Change contextdo 	
+	changeContext(DONE);
+
+
 }
 
 //////////////////////////////////
@@ -125,6 +130,35 @@ int removeThread(int id){
 }
 
 //////////////////////////////////
+//threadDead()
+//
+//parameters: 
+//      int id - id of thread to kill
+//		int parent - id of parent
+//returns: 
+//      int - 0 if dead
+//
+//Find if thread with is dead
+//////////////////////////////////
+int threadDead(int id, int parent){
+    //Pointers to nodes
+    contextNode* lead = information.head;
+    //Search while not NULL
+    while(lead!=NULL){
+        //If reached the correct node
+        if (lead->id==id){
+            if (lead->parent==parent){
+
+                return 1;
+            }
+        }
+        //Move values
+        lead = lead->next;
+    }
+	return 0;	//if none match, return 0
+}
+
+//////////////////////////////////
 //changeContext()
 //
 //parameters: 
@@ -142,14 +176,15 @@ void changeContext(int sig)
 	contextNode* prev; 
 
     //Swap context
-	if (current->next!=NULL){
+	if (sig==DONE){		//a thread just finished
+		current = current;
+		prev = dead;	
+	}else if (current->next!=NULL){		//last thread in linked list
 		prev = current;
 		current = current->next;
-	fprintf(stderr, "a:%d %d\n", prev->id, current->id);
 	}else{
 		prev = current;
     	current = information.head;
-	fprintf(stderr, "a:%d %d\n", prev->id, current->id);
 	}
     
     //Set signal handler
@@ -166,7 +201,7 @@ void changeContext(int sig)
     setitimer(ITIMER_VIRTUAL, &it, NULL);
 
 	//Swap COntext
-    swapcontext(prev, current);
+    swapcontext(&prev->node, &current->node);
 }
 
 //////////////////////////////////

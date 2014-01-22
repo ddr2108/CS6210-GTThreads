@@ -11,9 +11,11 @@
 //Initialize threading library
 //////////////////////////////////
 void gtthread_init(long period){
-	setRR(period);		//Initilize time between round robin switching
-
 	ucontext_t newContext;	//hold context
+
+	setRR(period);		//Initilize time between round robin switching
+	
+	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables
 	
 	//add Context
 	 addContext(newContext);
@@ -77,8 +79,10 @@ int  gtthread_create(gtthread_t *thread,
 //Join thread with given id
 //////////////////////////////////
 int  gtthread_join(gtthread_t thread, void **status){
-	//Wait for thread to finish
-//rc = waitone(thread, INFINITE);
+	//check if thread is dead	
+	while(threadDead(thread, gtthread_self())==1){
+		gtthread_yield();	//yield to next thread
+	}
     return 0;   //success
 
 	//FIX: status

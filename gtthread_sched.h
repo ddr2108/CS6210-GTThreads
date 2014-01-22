@@ -6,23 +6,27 @@
 #include <signal.h>
 #include <ucontext.h>
 
+#define DONE 888
+
 //Node
 typedef struct _contextNode{
     ucontext_t node;
     int id;
-    struct _contextNode* next;
     int parent;
+    struct _contextNode* next;
 } contextNode;
 
 //Node Linked List
 typedef struct _context{
     contextNode* head;
     contextNode* tail;
+	struct _context *next;
 } context;
 
 context information;    //Information about linked list
 contextNode* current;    //Current context running
 
+contextNode* dead;
 
 
 //////////////////////////////////
@@ -62,6 +66,19 @@ void removeContext();
 //Kill Thread with given id
 //////////////////////////////////
 int removeThread(int id);
+
+//////////////////////////////////
+//threadDead()
+//
+//parameters: 
+//      int id - id of thread to kill
+//		int parent - id of parent
+//returns: 
+//      int - 0 if dead
+//
+//Find if thread with is dead
+//////////////////////////////////
+int threadDead(int id, int parent);
 
 //////////////////////////////////
 //changeContext()
