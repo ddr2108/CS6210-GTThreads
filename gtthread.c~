@@ -17,7 +17,6 @@ void gtthread_init(long period){
 	
 	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables
 	
-information.id = 0;
 	//add Context
 	 addContext(newContext);
 }
