@@ -3,6 +3,11 @@
 unsigned int addContext(ucontext_t newContext){
     //Create new node
     contextNode* newNode = getNode();
+    
+    if (newNode==NULL){
+        perror("Out of threads");
+    }
+    
 	//Set parts
     newNode->node = newContext;				//Set context
 	newNode->id = information.id++;			//Set id
@@ -180,13 +185,14 @@ contextNode* getNode(){
         }
     }
     
+    return NULL;
+    
     /*//old version/
     contextNode* newNode = (contextNode*) malloc(sizeof(contextNode))
     return newNode;
     */
 
 }
-
 
 void removeNode(contextNode* toDelete){
     int index;
