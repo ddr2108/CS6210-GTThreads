@@ -21,7 +21,7 @@ typedef struct _contextNode{
 //Node Linked List
 typedef struct _context{
 	long RRPeriod;		//Period associated with Round robin				
-	int id;			//ID of next thread 
+	unsigned int id;			//ID of next thread 
     contextNode* head;	//pointers to context nodes
     contextNode* tail;
 } context;
@@ -43,11 +43,11 @@ contextNode* dead;
 //      ucontext_t newContext - 
 //             new threads context
 //returns: 
-//      int - id
+//      unsigned int - id
 //
 //Adds context to linked list
 //////////////////////////////////
-int addContext(ucontext_t newContext);
+unsigned int addContext(ucontext_t newContext);
 
 //////////////////////////////////
 //removeContext()
@@ -66,13 +66,13 @@ void removeContext(contextNode* toDelete);
 //removeID()
 //
 //parameters: 
-//      int id - id of thread to kill
+//      unsigned int id - id of thread to kill
 //returns: 
 //      int - success
 //
 //Kill Thread with given id
 //////////////////////////////////
-int removeID(int id);
+int removeID(unsigned int id);
 
 //////////////////////////////////
 //initialContext()
@@ -103,26 +103,26 @@ void changeContext(int sig);
 //threadDead()
 //
 //parameters: 
-//      int id - id of thread to kill
+//      unsigned int id - id of thread to kill
 //		int parent - id of parent
 //returns: 
 //      int - 0 if dead
 //
 //Find if thread with is dead
 //////////////////////////////////
-int threadDead(int id, int parent);
+int threadDead(unsigned int id, int parent);
 
 //////////////////////////////////
 //findThread()
 //
 //parameters: 
-//      int id - id of thread to find
+//      unsigned int id - id of thread to find
 //returns: 
 //      contextNode* - pointer to node
 //
 //Adds context to linked list
 //////////////////////////////////
-contextNode* findThread(int ID);
+contextNode* findThread(unsigned int id);
 
 //////////////////////////////////
 //setTimer()
@@ -147,5 +147,17 @@ void setTimer();
 //Return id of self
 //////////////////////////////////
 int getID();
+
+//////////////////////////////////
+//cleanMemory()
+//
+//parameters: 
+//      none
+//returns: 
+//      none
+//
+//Clean all memory
+//////////////////////////////////
+void cleanMemory();
 
 #endif // __GTTHREAD_SCHED_H

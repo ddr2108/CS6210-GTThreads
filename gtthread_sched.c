@@ -1,7 +1,7 @@
 #include "gtthread_sched.h"
 #include <stdio.h>
 
-int addContext(ucontext_t newContext){
+unsigned int addContext(ucontext_t newContext){
     //Create new node
     contextNode* newNode = (contextNode*) malloc(sizeof(contextNode));
 	//Set parts
@@ -36,8 +36,9 @@ void removeContext(contextNode* toDelete){
 
 	//Fix head if needed
 	if (toDelete==information.head){
-		information.head = current->next;	
-		information.tail = information.head->prev;
+		cleanMemory();
+		free(toDelete);
+		exit(0);
 	}
 
 	//Change context if removing current context
@@ -50,7 +51,7 @@ void removeContext(contextNode* toDelete){
 	free(toDelete);	//Free allocated memory
 }
 
-int removeID(int id){
+int removeID(unsigned int id){
     //Pointers to thread
     contextNode* thread = findThread(id);
 
@@ -90,7 +91,7 @@ void changeContext(int sig)
     swapcontext(&prev->node, &current->node);
 }
 
-int threadDead(int id, int parent){
+int threadDead(unsigned int id, int parent){
     //Pointers to thread
     contextNode* thread = findThread(id);
 
@@ -102,7 +103,7 @@ int threadDead(int id, int parent){
 	return 0;	//if none match, return 0
 }
 
-contextNode* findThread(int id){
+contextNode* findThread(unsigned int id){
     //Pointers to nodes
     contextNode* thread = information.head;
     
@@ -141,4 +142,15 @@ void setTimer(){
 int getID(){
 	//Get id and return
 	return current->id;
+}
+
+void cleanMemory(){
+    contextNode* thread = information.head->next;
+    
+	//Remove data associated with each thread	
+    while(thread!=information.head && thread!=NULL){
+		removeID(thread->id);
+	}
+
+	free(dead);
 }
