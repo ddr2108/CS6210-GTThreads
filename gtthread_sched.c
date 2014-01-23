@@ -1,5 +1,4 @@
 #include "gtthread_sched.h"
-#include <stdio.h>
 
 unsigned int addContext(ucontext_t newContext){
     //Create new node
@@ -78,7 +77,7 @@ void changeContext(int sig)
     //Swap context
 	if (sig==DONE){		//a thread just finished
 		current = current;
-		prev = dead;	
+		prev = &dead;	
 	}else{
 		prev = current;
     	current = current->next;
@@ -176,6 +175,4 @@ void cleanMemory(){
     while(thread!=information.head && thread!=NULL){
 		removeID(thread->id);
 	}
-
-	free(dead);
 }

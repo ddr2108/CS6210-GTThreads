@@ -1,12 +1,10 @@
 #include "gtthread.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 void gtthread_init(long period){
 	int i;	
 	ucontext_t newContext;	//hold context
 
 	//Initialize variables for killing threads
-	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables	
 	indexKilled = 0;
 	for (i=0;i<KILL_ARRAY;i++){
 		killed[i].valid = 0;
@@ -65,8 +63,6 @@ int  gtthread_join(gtthread_t thread, void **status){
 	}
 
     return 1;
-
-	//FIX: status
 }
 
 void gtthread_exit(void *retval){

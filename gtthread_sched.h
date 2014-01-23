@@ -33,7 +33,7 @@ typedef struct _context{
 context information;    //Information about linked list
 contextNode* current;    //Current context running
 
-contextNode* dead;
+contextNode dead;
 
 //Killed Array
 struct _killed{
