@@ -28,11 +28,22 @@ typedef struct _context{
 
 //////////GLOBAL VARIABLES/////////////////////////////////////////////
 #define DONE 888
+#define KILL_ARRAY 2000
 
 context information;    //Information about linked list
 contextNode* current;    //Current context running
 
 contextNode* dead;
+
+//Killed Array
+struct _killed{
+	unsigned int id;	//ID of thread 
+	unsigned int parent;
+	void* ret;			//return value				
+	int valid;
+} killed[KILL_ARRAY];
+
+int indexKilled;
 
 ///////////////////FUNCTION PROTOTYPES///////////////////////////////////
 
@@ -147,6 +158,30 @@ void setTimer();
 //Return id of self
 //////////////////////////////////
 int getID();
+
+//////////////////////////////////
+//cleanMemory()
+//
+//parameters: 
+//      void* retval - return Value
+//returns: 
+//      none
+//
+//Sets return value
+//////////////////////////////////
+void setRet(void* retval);
+
+//////////////////////////////////
+//cleanMemory()
+//
+//parameters: 
+//      unsigned int id - id of thread
+//returns: 
+//      void* - return value
+//
+//Gets return Value
+//////////////////////////////////
+void* getRet(unsigned int id);
 
 //////////////////////////////////
 //cleanMemory()

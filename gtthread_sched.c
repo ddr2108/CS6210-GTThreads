@@ -137,11 +137,36 @@ void setTimer(){
     it.it_value.tv_sec = 0;
     it.it_value.tv_usec = information.RRPeriod;
     setitimer(ITIMER_PROF, &it, NULL);
+
 }
 
 int getID(){
 	//Get id and return
 	return current->id;
+}
+
+void setRet(void* retval){
+
+	//Set the array
+	killed[indexKilled].id = current->id;
+	killed[indexKilled].parent = current->parent;
+	killed[indexKilled].ret = retval;
+	killed[indexKilled++].valid = 1;
+}
+
+void* getRet(unsigned int id){
+	int i;	
+	//Go through each entry
+	for (i = 0; i<KILL_ARRAY; i++){
+		//if ids match
+		if(killed[i].id == id && killed[i].parent == current->id  && killed[i].valid == 1){
+			killed[i].valid = 0;			
+			return killed[indexKilled].ret;
+		}
+		
+	}
+
+	return NULL;
 }
 
 void cleanMemory(){

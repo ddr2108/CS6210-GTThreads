@@ -1,11 +1,17 @@
 #include "gtthread.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 void gtthread_init(long period){
+	int i;	
 	ucontext_t newContext;	//hold context
 
-	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables
-	
+	//Initialize variables for killing threads
+	dead = (contextNode*) malloc(sizeof(contextNode));	//set up some variables	
+	indexKilled = 0;
+	for (i=0;i<KILL_ARRAY;i++){
+		killed[i].valid = 0;
+	}
+
 	information.id = 0;					//Initialize strucutre
 	information.head = NULL;
 	information.tail = NULL;
@@ -40,18 +46,32 @@ int  gtthread_create(gtthread_t *thread,
 }
 
 int  gtthread_join(gtthread_t thread, void **status){
+	int i;	
 	
 	//check if thread is dead	
 	while(threadDead(thread, gtthread_self())==1){
 		gtthread_yield();	//yield to next thread if not
 	}
 
-    return 0;
+	//Go through each entry
+	for (i = 0; i<KILL_ARRAY; i++){
+		//if ids match
+		if(killed[i].id == thread && killed[i].parent == current->id  && killed[i].valid == 1){
+			killed[i].valid = 0;
+			*status = killed[i].ret;
+			return 0;
+		}
+		
+	}
+
+    return 1;
 
 	//FIX: status
 }
 
 void gtthread_exit(void *retval){
+
+	setRet(retval);			//Set the return value
     removeContext(current);	//Remove context from linked list
 }
 

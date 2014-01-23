@@ -17,20 +17,20 @@ int *k = (int*) in;
     return NULL;
 }
 
-int *thr1(void *in) {
+int thr1(void *in) {
 int i;
 int j = 0;
 int k = 5;
 int *a; 
     gtthread_t t1, t2;
-    gtthread_create( &t1, thr2, &k);
+
     for(i = 0; i<1; i++){
 	fprintf(stderr, "Hello\n");
     //fflush(stdout);
 	//gtthread_cancel(1);
 	}	
 
-gtthread_join(2, &a);
+//gtthread_join(2, &a);
 
 fprintf(stderr, "bler\n");
     return 5;
@@ -45,7 +45,10 @@ int *a;
    	gtthread_create( &t2, thr1, NULL);
 
 gtthread_join(1, &a);
-		fprintf(stderr,"Duh\n");
+
+				//a = (int*) killed[0].ret;
+				printf("asad:%d", a);
+
 		//gtthread_yield();
 
     return EXIT_SUCCESS;
