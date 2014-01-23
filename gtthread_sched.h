@@ -29,11 +29,16 @@ typedef struct _context{
 //////////GLOBAL VARIABLES/////////////////////////////////////////////
 #define DONE 888
 #define KILL_ARRAY 2000
+#deinfe MAX_THREADS 10000
 
 context information;    //Information about linked list
 contextNode* current;    //Current context running
 
-contextNode dead;
+// Array for easier allocation
+struct _allocContext{
+        contextNode newNode;
+	int valid;
+} nodeArray[MAX_THREADS];
 
 //Killed Array
 struct _killed{
@@ -42,8 +47,11 @@ struct _killed{
 	void* ret;			//return value				
 	int valid;
 } killed[KILL_ARRAY];
-
 int indexKilled;
+
+
+contextNode dead;
+
 
 ///////////////////FUNCTION PROTOTYPES///////////////////////////////////
 
@@ -182,6 +190,30 @@ void setRet(void* retval);
 //Gets return Value
 //////////////////////////////////
 void* getRet(unsigned int id);
+
+//////////////////////////////////
+//getNode()
+//
+//parameters: 
+//      none
+//returns: 
+//      contextNode* - new node
+//
+//Gets return Value
+//////////////////////////////////
+contextNode* getNode();
+
+//////////////////////////////////
+//removeNode()
+//
+//parameters: 
+//      contextNode* toDelete - node delete
+//returns: 
+//      none
+//
+//Gets return Value
+//////////////////////////////////
+void removeNode(contextNode* toDelete);
 
 //////////////////////////////////
 //cleanMemory()

@@ -2,7 +2,7 @@
 
 unsigned int addContext(ucontext_t newContext){
     //Create new node
-    contextNode* newNode = (contextNode*) malloc(sizeof(contextNode));
+    contextNode* newNode = getNode();
 	//Set parts
     newNode->node = newContext;				//Set context
 	newNode->id = information.id++;			//Set id
@@ -36,18 +36,18 @@ void removeContext(contextNode* toDelete){
 	//Fix head if needed
 	if (toDelete==information.head){
 		cleanMemory();
-		free(toDelete);
+		removeNode(toDelete);
 		exit(0);
 	}
 
 	//Change context if removing current context
 	if (toDelete==current){
 		current = current->next;
-		free(toDelete);
+		removeNode(toDelete);
 		changeContext(DONE);
 	}
 
-	free(toDelete);	//Free allocated memory
+	removeNode(toDelete);	//Free allocated memory
 }
 
 int removeID(unsigned int id){
@@ -150,7 +150,9 @@ void setRet(void* retval){
 	killed[indexKilled].id = current->id;
 	killed[indexKilled].parent = current->parent;
 	killed[indexKilled].ret = retval;
-	killed[indexKilled++].valid = 1;
+	killed[indexKilled].valid = 1;
+        
+        indexKillled = (indexKilled+1)%KILL_ARRAY;
 }
 
 void* getRet(unsigned int id){
@@ -166,6 +168,33 @@ void* getRet(unsigned int id){
 	}
 
 	return NULL;
+}
+
+contextNode* getNode(){
+    int i;
+    //look through array
+    for (i=0;i<MAX_THREADS;i++){
+        if (nodeArray[i].valid == 0){
+            nodeArray[i].valid = 1;     //Set valid
+            return &(nodeArray[i].newNode);     //return the node
+        }
+    }
+    
+    /*//old version/
+    contextNode* newNode = (contextNode*) malloc(sizeof(contextNode))
+    return newNode;
+    */
+
+}
+
+
+void removeNode(contextNode* toDelete){
+    int index;
+    //Index of item
+    index = ((struct _allocContext*)toDelete - nodeArray);
+    
+    nodeArray[index].valid = 0;     //Set not valid
+    //	free(toDelete)              //old verion
 }
 
 void cleanMemory(){
