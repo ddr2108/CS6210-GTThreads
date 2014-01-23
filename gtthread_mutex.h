@@ -1,12 +1,17 @@
 #ifndef __GTTHREAD_MUTEX_H
 #define __GTTHREAD_MUTEX_H
 
+#include <signal.h>
 #include <stdlib.h>
+
+/////////////////////STRUCTURES////////////////////////////////////////////////
 
 //Mutex
 typedef struct{
     int volatile value;		//Value to store whether mutex in use
 } gtthread_mutex_t;
+
+/////////////////////FUNCTIONS////////////////////////////////////////////////
 
 //////////////////////////////////
 //gtthread_mutex_init()

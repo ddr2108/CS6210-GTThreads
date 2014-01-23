@@ -38,27 +38,27 @@ void philosopherTask(void *arg){
     //Do acquiring and releasing of chopsticks
     while(1){
         //Acquire
-        printf("Philosopher %d Hungry", (int)arg);
-        printf("Philosopher %d Acquiring First Chopstick", (int)arg);
+        printf("Philosopher %d Hungry\n", (int)arg);
+        printf("Philosopher %d Acquiring First Chopstick\n", (int)arg);
         gtthread_mutex_lock(&first);
-        printf("Philosopher %d Acquiring Second Chopstick", (int)arg);
+        printf("Philosopher %d Acquiring Second Chopstick\n", (int)arg);
         gtthread_mutex_lock(&second);        
-        printf("Philosopher %d Eating", (int)arg);
+        printf("Philosopher %d Eating\n", (int)arg);
         
         //Eat
-        r=rand()%500;
+        r=rand()%500000;
         while(r-->0);
         
         //Release
-        printf("Philosopher %d Done Eating", (int)arg);
-        printf("Philosopher %d Releasing Second Chopstick", (int)arg);
+        printf("Philosopher %d Done Eating\n", (int)arg);
+        printf("Philosopher %d Releasing Second Chopstick\n", (int)arg);
         gtthread_mutex_unlock(&second);
-        printf("Philosopher %d Acquiring First Chopstick", (int)arg);
+        printf("Philosopher %d Acquiring First Chopstick\n", (int)arg);
         gtthread_mutex_unlock(&first);        
-        printf("Philosopher %d Thinking", (int)arg);
+        printf("Philosopher %d Thinking\n", (int)arg);
 
         //Think
-        r=rand()%500;
+        r=rand()%500000;
         while(r-->0);
     }
 }
@@ -67,7 +67,7 @@ void philosopherTask(void *arg){
 int main(){
 
     //Initialize threading
-    gtthread_init(1000);
+    gtthread_init(10);
 
     //Initialize mutex
     gtthread_mutex_init(&stick1);
@@ -82,6 +82,10 @@ int main(){
     gtthread_create(&t3, philosopherTask, (void*)3);
     gtthread_create(&t4, philosopherTask, (void*)4);
     gtthread_create(&t5, philosopherTask, (void*)5);
+
+	while(1);
+
+	return 0;
 }
 
 //make clean; rm test1; make; gcc -Wall -pedantic -I{...} -o philosophers philosophers.c gtthread.a;clear;  ./philosophers
