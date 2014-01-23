@@ -8,30 +8,30 @@ gtthread_mutex_t stick1,stick2,stick3,stick4,stick5;
 
 
 void philosopherTask(void *arg){
-    gtthread_mutex_t first, second;
+    gtthread_mutex_t* first, *second;
     int r; 
     
     //Figure out which chopsitcks they should pick up
     switch ((int)arg){
         case 1:
-            second = stick5;
-            first = stick1;
+            second = &stick5;
+            first = &stick1;
             break;
         case 2:
-            first = stick1;
-            second = stick2;
+            first = &stick1;
+            second = &stick2;
             break;
         case 3:
-            first = stick2;
-            second = stick3;
+            first = &stick2;
+            second = &stick3;
             break;
         case 4:
-            first = stick3;
-            second = stick4;
+            first = &stick3;
+            second = &stick4;
             break;      
         case 5:
-            first = stick4;
-            second = stick5;
+            first = &stick4;
+            second = &stick5;
             break;
     }
 
@@ -40,9 +40,9 @@ void philosopherTask(void *arg){
         //Acquire
         printf("Philosopher %d Hungry\n", (int)arg);
         printf("Philosopher %d Acquiring First Chopstick\n", (int)arg);
-        gtthread_mutex_lock(&first);
+        gtthread_mutex_lock(first);
         printf("Philosopher %d Acquiring Second Chopstick\n", (int)arg);
-        gtthread_mutex_lock(&second);        
+        gtthread_mutex_lock(second);        
         printf("Philosopher %d Eating\n", (int)arg);
         
         //Eat
@@ -52,9 +52,9 @@ void philosopherTask(void *arg){
         //Release
         printf("Philosopher %d Done Eating\n", (int)arg);
         printf("Philosopher %d Releasing Second Chopstick\n", (int)arg);
-        gtthread_mutex_unlock(&second);
+        gtthread_mutex_unlock(second);
         printf("Philosopher %d Acquiring First Chopstick\n", (int)arg);
-        gtthread_mutex_unlock(&first);        
+        gtthread_mutex_unlock(first);        
         printf("Philosopher %d Thinking\n", (int)arg);
 
         //Think
@@ -67,7 +67,7 @@ void philosopherTask(void *arg){
 int main(){
 
     //Initialize threading
-    gtthread_init(10);
+    gtthread_init(5);
 
     //Initialize mutex
     gtthread_mutex_init(&stick1);
