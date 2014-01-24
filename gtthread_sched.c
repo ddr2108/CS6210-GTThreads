@@ -11,7 +11,6 @@ unsigned int addContext(ucontext_t newContext){
 	//Set parts
     newNode->node = newContext;				//Set context
 	newNode->id = information.id++;			//Set id
-
     //Add node to linked list
     if (information.head==NULL){			//if it is the main thread
         information.head = newNode;			//Set the pointers
@@ -37,6 +36,11 @@ void removeContext(contextNode* toDelete){
 	//Fix pointers
 	toDelete->prev->next = toDelete->next;
 	toDelete->next->prev = toDelete->prev;
+
+	//if it is the tail
+	if (toDelete == information.tail){
+		information.tail = toDelete->prev;
+	}
 
 	//Fix head if needed
 	if (toDelete==information.head){
@@ -157,7 +161,7 @@ void setRet(void* retval){
 	killed[indexKilled].ret = retval;
 	killed[indexKilled].valid = 1;
         
-        indexKillled = (indexKilled+1)%KILL_ARRAY;
+    indexKilled = (indexKilled+1)%KILL_ARRAY;
 }
 
 void* getRet(unsigned int id){
@@ -181,7 +185,7 @@ contextNode* getNode(){
     for (i=0;i<MAX_THREADS;i++){
         if (nodeArray[i].valid == 0){
             nodeArray[i].valid = 1;     //Set valid
-            return &(nodeArray[i].newNode);     //return the node
+			return &(nodeArray[i].newNode);     //return the node
         }
     }
     

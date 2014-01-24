@@ -45,7 +45,7 @@ int  gtthread_create(gtthread_t *thread,
 
 int  gtthread_join(gtthread_t thread, void **status){
 	int i;	
-	
+
 	//check if thread is dead	
 	while(threadDead(thread, gtthread_self())==1){
 		gtthread_yield();	//yield to next thread if not
