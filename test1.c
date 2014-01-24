@@ -43,10 +43,10 @@ int *b;
 int c;
     gtthread_init(50000L);
    	gtthread_create( &t1, thr1, NULL);
-   	gtthread_create( &t2, thr2, 5);    
-c=gtthread_join(1, &a);
 
-c=gtthread_join(2, &b);
+c=gtthread_join(1, &a);
+   	gtthread_create( &t2, thr2, 5);    
+c=gtthread_join(3, &b);
 
 				//a = (int*) killed[0].ret;
 				printf("a:%d", a);

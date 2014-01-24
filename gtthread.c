@@ -4,6 +4,11 @@ void gtthread_init(long period){
 	int i;	
 	ucontext_t newContext;	//hold context
 
+	//INitialize threads
+	for (i=0;i<MAX_THREADS;i++){
+		nodeArray[i].valid = 0;
+	}
+
 	//Initialize variables for killing threads
 	indexKilled = 0;
 	for (i=0;i<KILL_ARRAY;i++){

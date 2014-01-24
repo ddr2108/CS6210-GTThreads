@@ -36,7 +36,7 @@ contextNode* current;    //Current context running
 
 // Array for easier allocation
 struct _allocContext{
-        contextNode newNode;
+    contextNode newNode;
 	int valid;
 } nodeArray[MAX_THREADS];
 
