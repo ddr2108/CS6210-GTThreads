@@ -23,7 +23,7 @@ int j = 0;
 int k = 5;
 int *a; 
     gtthread_t t1, t2;
-   	gtthread_create( &t2, thr2, 5);    
+   	//gtthread_create( &t2, thr2, 5);    
 for(i = 0; i<3; i++){
 	fprintf(stderr, "Hello\n");
     //fflush(stdout);
@@ -31,7 +31,7 @@ for(i = 0; i<3; i++){
 	}	
 
 
-    return 5;
+    return 8;
 }
 
 
@@ -43,14 +43,15 @@ int *b;
 int c;
     gtthread_init(50000L);
    	gtthread_create( &t1, thr1, NULL);
-
-c=gtthread_join(1, &a);
-   	gtthread_create( &t2, thr2, 5);    
-c=gtthread_join(3, &b);
+				printf("id:%d\n", t1);
+gtthread_join(t1, &a);
+   	gtthread_create( &t2, thr2, 5);  
+				printf("id:%d\n", t2);  
+gtthread_join(t2, &b);
 
 				//a = (int*) killed[0].ret;
-				printf("a:%d", a);
-				printf("b:%d", b);
+				printf("a:%d\n", a);
+				printf("b:%d\n", b);
 		//gtthread_yield();
 
     return EXIT_SUCCESS;

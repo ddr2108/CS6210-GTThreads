@@ -9,12 +9,6 @@ void gtthread_init(long period){
 		nodeArray[i].valid = 0;
 	}
 
-	//Initialize variables for killing threads
-	indexKilled = 0;
-	for (i=0;i<KILL_ARRAY;i++){
-		killed[i].valid = 0;
-	}
-
 	information.id = 0;					//Initialize strucutre
 	information.head = NULL;
 	information.tail = NULL;
@@ -45,7 +39,9 @@ int  gtthread_create(gtthread_t *thread,
 	makecontext(&newContext, gtthread_execute,2,start_routine,arg);
 
 	//add Context
-	return addContext(newContext);
+	*thread=addContext(newContext);
+
+	return 0;
 }
 
 int  gtthread_join(gtthread_t thread, void **status){
@@ -57,21 +53,18 @@ int  gtthread_join(gtthread_t thread, void **status){
 	}
 
 	//Go through each entry
-	for (i = 0; i<KILL_ARRAY; i++){
-		//if ids match
-		if(killed[i].id == thread && killed[i].parent == current->id  && killed[i].valid == 1){
-			killed[i].valid = 0;
-			*status = killed[i].ret;
+    for (i=0;i<MAX_THREADS;i++){
+        if (nodeArray[i].valid == 2 && nodeArray[i].newNode.id == thread && nodeArray[i].newNode.parent == current->id){
+            nodeArray[i].valid = 0;     //Set valid
+			*status = nodeArray[i].ret;
 			return 0;
-		}
-		
-	}
+        }
+    }
 
     return 1;
 }
 
 void gtthread_exit(void *retval){
-
 	setRet(retval);			//Set the return value
     removeContext(current);	//Remove context from linked list
 }

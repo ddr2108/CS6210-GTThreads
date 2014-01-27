@@ -154,29 +154,11 @@ int getID(){
 }
 
 void setRet(void* retval){
-
-	//Set the array
-	killed[indexKilled].id = current->id;
-	killed[indexKilled].parent = current->parent;
-	killed[indexKilled].ret = retval;
-	killed[indexKilled].valid = 1;
-        
-    indexKilled = (indexKilled+1)%KILL_ARRAY;
-}
-
-void* getRet(unsigned int id){
-	int i;	
-	//Go through each entry
-	for (i = 0; i<KILL_ARRAY; i++){
-		//if ids match
-		if(killed[i].id == id && killed[i].parent == current->id  && killed[i].valid == 1){
-			killed[i].valid = 0;			
-			return killed[indexKilled].ret;
-		}
-		
-	}
-
-	return NULL;
+    int index;
+    //Index of item
+    index = ((struct _allocContext*)current - nodeArray);
+    
+    nodeArray[index].ret = retval;
 }
 
 contextNode* getNode(){
@@ -203,7 +185,7 @@ void removeNode(contextNode* toDelete){
     //Index of item
     index = ((struct _allocContext*)toDelete - nodeArray);
     
-    nodeArray[index].valid = 0;     //Set not valid
+    nodeArray[index].valid = 2;     //Set not valid, not yet joined
     //	free(toDelete)              //old verion
 }
 
