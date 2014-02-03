@@ -1,58 +1,94 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "gtthread.h"
-
+    gtthread_t t1, t2;
+gtthread_mutex_t g_mutex;
 /* Tests creation.
    Should print "Hello World!" */
-int thr2(void *in) {
+void thr2(void *in) {
 int i;
 int j = 0;
+char * a;
 //int *k = (int*) in;
-    for(i = 0; i<5; i++){
-	fprintf(stderr, "World\n");
-    //fflush(stdout);
-	//gtthread_cancel(1);
-	}	
-	
-    return 125;
+	gtthread_join(t1, NULL);
+			printf("Exiting %d\n", 1); 
+    return;
 }
 
-int thr1(void *in) {
-int i;
+void thr1(void *in) {
+int i; 
 int j = 0;
-int k = 5;
-int *a; 
-    gtthread_t t1, t2;
-   	//gtthread_create( &t2, thr2, 5);    
-for(i = 0; i<3; i++){
-	fprintf(stderr, "Hello\n");
+
+int *a = (int*)in; 
+int k = 20000000;
+
+
+//for(i = 0; i<3; i++){
+	//printf("Exiting asd: %d\n", gtthread_equal(t2, gtthread_self()));
+	//while(k--);
+	//printf("Exiting Thread 1\n");
+	//fflush(stdout);
     //fflush(stdout);
 	//gtthread_cancel(1);
-	}	
+	//}	
+//gtthread_exit("Asd");
+	//gtthread_mutex_lock(&g_mutex);
+	//gtthread_mutex_unlock(&g_mutex);
+	//while(1){
+	/*for (i = 0 ; i <10; i++){
+		//gtthread_mutex_lock(&g_mutex);
+		printf("Exiting %d\n", gtthread_self()); 
+		//gtthread_mutex_unlock(&g_mutex);
+		while(k--);
+k = 2000000;
+	//gtthread_yield();
+	}*/
 
+//gtthread_join(t2, NULL);
+		while(k--);
+		printf("Exiting %d\n", 2); 
 
-    return 8;
+char quote[] = "woah";
+    return;
 }
 
 
 
 int main() {
-    gtthread_t t1, t2;
-int *a; 
+
+char *a; 
 int *b;
-int c;
-    gtthread_init(50000L);
+int c = 1000;
+    gtthread_init(50L);
+	//gtthread_mutex_init(&g_mutex);
+	//gtthread_mutex_lock(&g_mutex);
    	gtthread_create( &t1, thr1, NULL);
-				printf("id:%d\n", t1);
-gtthread_join(t1, &a);
-   	gtthread_create( &t2, thr2, 5);  
-				printf("id:%d\n", t2);  
-gtthread_join(t2, &b);
+   	gtthread_create( &t2, thr2, NULL);
+
+				//printf("id:%d\n", t1);
+	//while(c--);
+   	//gtthread_create( &t2, thr1, 5);  
+			//	printf("id:%d\n", t2); 
+	//printf("Exiting Main\n"); 
+
+
+	/*	while(1);
+
+	printf("Exiting Main\n");
+	//gtthread_mutex_unlock(&g_mutex);
+	gtthread_yield();
+	gtthread_join(t1, &b);*/
+
 
 				//a = (int*) killed[0].ret;
-				printf("a:%d\n", a);
-				printf("b:%d\n", b);
+
+
+				//printf("b:%s\n", b);
 		//gtthread_yield();
+
+while(1);
+//gtthread_cancel(t1);
+//gtthread_exit(NULL);
 
     return EXIT_SUCCESS;
 }

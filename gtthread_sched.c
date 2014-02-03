@@ -125,7 +125,7 @@ int threadDead(unsigned int id, int parent){
     contextNode* thread = findThread(id);
 
 	//if thread found, return 1
-	if (thread!=NULL && thread->parent==parent){
+	if (thread!=NULL){
 		return 1;
     }
 

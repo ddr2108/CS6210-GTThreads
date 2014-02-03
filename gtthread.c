@@ -54,7 +54,7 @@ int  gtthread_join(gtthread_t thread, void **status){
 
 	//Go through each entry
     for (i=0;i<MAX_THREADS;i++){
-        if (nodeArray[i].valid == 2 && nodeArray[i].newNode.id == thread && nodeArray[i].newNode.parent == current->id){
+        if (nodeArray[i].valid == 2 && nodeArray[i].newNode.id == thread){
             nodeArray[i].valid = 0;     //Set valid
 			if (status != NULL){
 				*status = nodeArray[i].ret;
