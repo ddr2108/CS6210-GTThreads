@@ -67,8 +67,10 @@ int  gtthread_join(gtthread_t thread, void **status){
 }
 
 void gtthread_exit(void *retval){
+
 	setRet(retval);			//Set the return value
     removeContext(current);	//Remove context from linked list
+
 }
 
 int gtthread_yield(){

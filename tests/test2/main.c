@@ -46,10 +46,6 @@ int main()
 			fprintf(stderr, 
 					"!ERROR! %dth return value is wrong! %d, %d\n",
 					i, rets[i], g_return_values[i]);
-		}else{
-						fprintf(stderr, 
-					"NOT ERROR! %dth return value is wrong! %d, %d\n",
-					i, rets[i], g_return_values[i]);
 		}		
 	}
 

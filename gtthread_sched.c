@@ -1,5 +1,5 @@
 #include "gtthread_sched.h"
-
+#include <stdio.h>
 unsigned int addContext(ucontext_t newContext){
     //Create new node
     contextNode* newNode = getNode();
@@ -33,6 +33,7 @@ unsigned int addContext(ucontext_t newContext){
 }
 
 void removeContext(contextNode* toDelete){
+
 	//Fix pointers
 	toDelete->prev->next = toDelete->next;
 	toDelete->next->prev = toDelete->prev;
@@ -44,9 +45,28 @@ void removeContext(contextNode* toDelete){
 
 	//Fix head if needed
 	if (toDelete==information.head){
-		cleanMemory();
-		removeNode(toDelete);
-		exit(0);
+		//if last node exit
+		if (toDelete->next!=NULL && toDelete->next!=toDelete){
+			information.head = toDelete->next;
+		}else{
+			exit(3);
+		}
+
+		//if not joinable, mark as invalid
+		if (toDelete->parent == -1){
+			int index;
+			//Index of item
+			index = ((struct _allocContext*)toDelete - nodeArray);
+		
+			nodeArray[index].valid = 0;     //Set not valid, not yet joined
+
+			//Change context if removing current context
+			if (toDelete==current){
+				current = current->next;
+				changeContext(DONE);
+				return;
+			}
+		}
 	}
 
 	//Change context if removing current context
@@ -54,6 +74,7 @@ void removeContext(contextNode* toDelete){
 		current = current->next;
 		removeNode(toDelete);
 		changeContext(DONE);
+		return;
 	}
 
 	removeNode(toDelete);	//Free allocated memory
