@@ -18,7 +18,7 @@ LIB_OBJ = $(patsubst %.c,%.o,$(LIB_SRC))
 	$(CC) -c $(CFLAGS) $< -o $@ 
 
 all: $(LIBRARY)
-	$(CC) $(CFLAGS) -I{...} -o philosophers philosophers.c gtthread.a
+	$(CC) -c $(CFLAGS) -I{...} -o philosophers philosophers.c gtthread.a
 
 $(LIBRARY): $(LIB_OBJ)
 	$(AR) $(LIBRARY) $(LIB_OBJ)

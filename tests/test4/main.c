@@ -33,7 +33,7 @@ int main()
 {
 	gtthread_t th;
 
-	gtthread_init(1000);
+	gtthread_init(1);
 	gtthread_create(&th, worker, (void*) 1);
 	gtthread_join(th, NULL);
 	return 0;

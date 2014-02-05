@@ -6,7 +6,7 @@ I choose which thread to go next based on the linked list. Basically I keep a po
 Sometimes a thread may not be able to do any more work or just needs to yield. To be able to hand this, a thread has two options. It can either raise the SIGPROF signal, which will automatically go to the change context function to change the context, or it can just call the change context function. Thus this will yield the time on the processor and the thread can get it back when the round robin gets back to that thread. 
 
 3.
-COMPILING LIBRARY: make (does philosophers by default)
+COMPILING LIBRARY: make
 COMPILING PROGRAM: gcc -Wall -pedantic -I{...} -o philosophers philosophers.c gtthread.a
 RUN: ./philosophers
 
