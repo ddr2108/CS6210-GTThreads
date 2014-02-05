@@ -14,7 +14,7 @@ int  gtthread_mutex_init(gtthread_mutex_t *mutex){
 int  gtthread_mutex_lock(gtthread_mutex_t *mutex){
     //Attempt to change valu eof mutex to 1 when was 0 perviously
 	while (__sync_lock_test_and_set(&mutex->value, 1)==1){
-    		raise(SIGPROF);	//Change context
+    		raise(SIGVTALRM);	//Change context
 	}
 
         return 0;

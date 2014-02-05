@@ -1,5 +1,20 @@
 #include "gtthread_sched.h"
 #include <stdio.h>
+
+void blockSig(){
+	sigset_t set;
+	sigemptyset(&set);
+	sigaddset(&set, SIGVTALRM);
+	sigprocmask(SIG_BLOCK, &set, NULL);
+}
+
+void unblockSig(){
+	sigset_t set;
+	sigemptyset(&set);
+	sigaddset(&set, SIGVTALRM);
+	sigprocmask(SIG_UNBLOCK, &set, NULL);
+}
+
 unsigned int addContext(ucontext_t newContext){
     //Create new node
     contextNode* newNode = getNode();
@@ -154,18 +169,20 @@ void setTimer(){
     struct itimerval it;       		//Structure to hold time info
     struct sigaction act, oact;     //Structure for signal handler
     
+	blockSig();
     //Set signal handler
     act.sa_handler = changeContext;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction(SIGPROF, &act, &oact); 
+    sigaction(SIGVTALRM, &act, &oact); 
 
     // Start itimer
     it.it_interval.tv_sec = 0;
     it.it_interval.tv_usec = information.RRPeriod;
     it.it_value.tv_sec = 0;
     it.it_value.tv_usec = information.RRPeriod;
-    setitimer(ITIMER_PROF, &it, NULL);
+    setitimer(ITIMER_VIRTUAL, &it, NULL);
+	unblockSig();
 
 }
 
